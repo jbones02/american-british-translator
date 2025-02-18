@@ -6,44 +6,42 @@ module.exports = function (app) {
   
   const translator = new Translator();
 
-  const translateBritishToAmerican = britishText => {
-
-  }
-
-  const translateAmericanToBritish = AmericanText => {
-    
-  }
-
-  const translate = (untraslatedText, originalLocale) => {
-    let returnObj;
-    if (!untranslatedText || !originalLocale) {
-      returnObj = { error: 'Required field(s) missing' }
-    } else if (originalLocale === 'american-to-british') {
-      returnObj = {
-        text: untraslatedText,
-        translation: translateBritishToAmerican(untraslatedText)
+  const translate = (untranslatedText, locale) => {
+    let resObj;
+    if (untranslatedText === '') {
+      resObj = { error: 'No text to translate' }
+    } else if (locale === 'american-to-british') {
+      resObj = {
+        text: untranslatedText,
+        translation: translator.americanToBritish(untranslatedText)
       };
-    } else if (originalLocale === 'british-to-american') {
-      returnObj ={
-        text: untraslatedText,
-        translation: translateAmericanToBritish(untraslatedText);
+    } else if (locale === 'british-to-american') {
+      resObj = {
+        text: untranslatedText,
+        translation: translator.britishToAmerican(untranslatedText)
       };
     } else {
-      returnObj = { error: 'Invalid value for locale field'}
+      resObj = { error: 'Invalid value for locale field'}
     }
-    return returnObj;
+    
+    if (untranslatedText === resObj.translation) {
+      resObj.translation = 'Everything looks good to me!'
+    }
+
+    return resObj;
   }
 
   app.route('/api/translate')
     .post((req, res) => {
       try {
-        const untraslatedText = req.body.text;
-        const originalLocale = req.body.locale;
+        const untranslatedText = req.body.text;
+        const locale = req.body.locale;
 
-        if (!untraslatedText || !originalLocale) {
+        if (untranslatedText == null || !locale) {
           return res.status(200).json({ error: 'Required field(s) missing' });
         } else {
-          return translate(untraslatedText, originalLocale);
+          const resObj = translate(untranslatedText, locale);
+          return res.status(200).json(resObj);
         }
 
       } catch (err) {
