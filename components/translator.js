@@ -12,7 +12,7 @@ class Translator {
     americanToBritish(text) {
         let translatedText = text;
 
-        // Translate American-only words (longest phrases first)
+        // Translate American-only words
         Object.keys(americanOnly)
             .sort((a, b) => b.length - a.length)
             .forEach(word => {
@@ -48,7 +48,7 @@ class Translator {
     britishToAmerican(text) {
         let translatedText = text;
 
-        // Translate British-only words (longest phrases first)
+        // Translate British-only words
         Object.keys(britishOnly)
             .sort((a, b) => b.length - a.length)
             .forEach(word => {
@@ -69,12 +69,13 @@ class Translator {
         Object.keys(americanToBritishTitles)
             .sort((a, b) => b.length - a.length)
             .forEach(title => {
-                const britishTitle = americanToBritishTitles[title];
+                const britishTitle = americanToBritishTitles[title]; // Already includes the period
                 const regex = new RegExp(`\\b${britishTitle}\\b`, 'gi');
                 translatedText = translatedText.replace(regex, (match) => {
-                    const formattedTitle = this.capitalizeFirstLetter(title) + ".";
+                    const formattedTitle = this.capitalizeFirstLetter(title);
                     return `<span class="highlight">${formattedTitle}</span>`;
                 });
+                
             });
 
         // Convert time format (10.30 -> 10:30)
