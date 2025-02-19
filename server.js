@@ -37,20 +37,22 @@ app.use(function(req, res, next) {
 
 const portNum = process.env.PORT || 3000;
 
-// Start our server and tests!
-app.listen(portNum, () => {
-  console.log(`Listening on port ${portNum}`);
-  if (process.env.NODE_ENV==='test') {
-    console.log('Running Tests...');
-    setTimeout(function () {
-      try {
-        runner.run();
-      } catch (error) {
-        console.log('Tests are not valid:');
-        console.error(error);
-      }
-    }, 1500);
-  }
-});
+// Prevents the server from starting when imported in tests
+if (!module.parent) {
+  app.listen(portNum, () => {
+    console.log(`Listening on port ${portNum}`);
+    if (process.env.NODE_ENV==='test') {
+      console.log('Running Tests...');
+      setTimeout(function () {
+        try {
+          runner.run();
+        } catch (error) {
+          console.log('Tests are not valid:');
+          console.error(error);
+        }
+      }, 1500);
+    }
+  });
+}
 
 module.exports = app; // For testing
