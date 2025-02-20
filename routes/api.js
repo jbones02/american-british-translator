@@ -9,7 +9,7 @@ module.exports = function (app) {
   const translate = (untranslatedText, locale) => {
     let resObj;
     if (untranslatedText === '') {
-      resObj = { error: 'No text to translate' }
+      resObj = { error: 'No text to translate' };
     } else if (locale === 'american-to-british') {
       resObj = {
         text: untranslatedText,
@@ -21,7 +21,7 @@ module.exports = function (app) {
         translation: translator.britishToAmerican(untranslatedText)
       };
     } else {
-      resObj = { error: 'Invalid value for locale field'}
+      resObj = { error: 'Invalid value for locale field' }
     }
     
     if (untranslatedText === resObj.translation) {
